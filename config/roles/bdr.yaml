@@ -1,0 +1,180 @@
+company:
+  name: "Acme AI"  # replace with your company
+  description: "a fast-growing AI startup"
+
+ats:
+  profile_label: "View in Ashby"
+
+role:
+  title: "Business Development Representative"
+  slug: "bdr"
+  ashby_job_title: "Business Development Representative"
+  application_date_cutoff: "2026-01-01"
+  jd_file: "bdr.md"
+
+criteria:
+  must_have:
+    - "2+ years in BDR/SDR or sales roles, specifically in B2B SaaS"
+    - "Comfortable learning technical concepts and translating GenAI capabilities into clear business value"
+    - "Proactive, organized, and iterative — enjoys testing messaging and improving processes"
+
+  strong_signals:
+    - "Existing Fortune 500 network or enterprise relationships"
+    - "AI/GenAI industry experience or strong understanding of the AI landscape"
+    - "Enterprise deal cycle experience — long sales cycles, multiple stakeholders"
+    - "Track record of exceeding quota or pipeline targets with specific metrics"
+    - "Event organizing, conference attendance, or community-building experience"
+    - "Creative outbound approaches — not just spray-and-pray email campaigns"
+
+  red_flags:
+    - "No B2B experience — only B2C, retail, or non-SaaS sales background"
+    - "Pure marketing background with no outbound prospecting or sales execution"
+    - "Resume language copies job posting verbatim — keyword stuffing without substance"
+    - "Job-hopping with no clear progression or quota attainment evidence"
+    - "No evidence of learning technical products or engaging technical buyers"
+
+triage_dimensions:
+  - label: "Sales/BDR Experience"
+    description: >
+      Score 1-5 based on depth and quality of BDR/SDR or outbound sales experience.
+      5 = 3+ years BDR/SDR at B2B SaaS companies with documented quota attainment, promotions.
+      4 = 2+ years BDR/SDR with solid pipeline generation track record in SaaS.
+      3 = Sales experience but limited BDR-specific work, or strong BDR but in non-SaaS.
+      2 = Less than 2 years sales, or mostly inbound/account management rather than outbound.
+      1 = No sales experience, or only B2C/retail/non-relevant sales background.
+
+  - label: "B2B SaaS & GenAI Knowledge"
+    description: >
+      Score 1-5 based on familiarity with B2B SaaS selling and AI/GenAI concepts.
+      5 = Sold AI/ML products to enterprises, deep understanding of LLM capabilities and value props.
+      4 = B2B SaaS sales experience plus genuine AI curiosity or side learning.
+      3 = B2B SaaS experience but limited AI knowledge, or AI knowledge but limited SaaS sales.
+      2 = General tech sales but no SaaS or AI-specific experience.
+      1 = No tech sales experience, no evidence of AI/tech literacy.
+
+  - label: "Outbound Prospecting"
+    description: >
+      Score 1-5 based on evidence of proactive outbound prospecting skills and creativity.
+      5 = Highly creative multi-channel outbound — email, LinkedIn, events, cold calling — with metrics.
+      4 = Strong outbound track record with documented pipeline generation numbers.
+      3 = Some outbound experience but mostly inbound or warm lead-driven.
+      2 = Limited outbound, mostly reactive or support-oriented sales activity.
+      1 = No outbound prospecting experience or evidence of proactive pipeline building.
+
+  - label: "Communication & Discovery"
+    description: >
+      Score 1-5 based on evidence of strong communication, discovery, and qualification skills.
+      5 = Exceptional communicator — evidence of running discovery calls, qualifying complex deals, engaging decision-makers.
+      4 = Strong communication skills, experience identifying decision-makers and running qualification.
+      3 = Decent communication but limited evidence of structured discovery or qualification.
+      2 = Basic communication, mostly transactional interactions rather than consultative.
+      1 = No evidence of professional communication skills or consultative selling approach.
+
+  - label: "Authenticity Gut Check"
+    description: >
+      Score 1-5 based on how genuine, specific, and believable the resume feels.
+      5 = Specific quota numbers, named accounts, concrete examples of wins, coherent progression.
+      4 = Mostly specific with some metrics, believable career narrative.
+      3 = Mixed — some specific details but also generic sales language.
+      2 = Mostly generic buzzwords, vague claims about pipeline, no specific metrics.
+      1 = Obvious keyword stuffing, inflated titles, or fabricated-looking accomplishments.
+
+scoring_dimensions:
+  - name: "outbound_prospecting"
+    description: >
+      Outbound prospecting skills — cold outreach, multi-channel campaigns, account targeting.
+      10 = Built outbound playbooks, multi-channel mastery, consistently exceeded pipeline targets.
+      7-9 = Strong outbound track record, creative approaches, documented pipeline metrics.
+      4-6 = Some outbound experience but limited sophistication or metrics.
+      1-3 = No outbound prospecting experience, or only warm/inbound lead handling.
+
+  - name: "discovery_qualification"
+    description: >
+      Discovery and qualification skills — uncovering pain points, identifying decision-makers, BANT/MEDDIC.
+      10 = Expert qualifier, uses structured frameworks, consistently identifies high-value opportunities.
+      7-9 = Strong discovery skills, good at identifying pain points and decision-makers.
+      4-6 = Basic qualification ability but lacks structured approach or depth.
+      1-3 = No evidence of discovery or qualification skills, transactional selling only.
+
+  - name: "saas_sales_experience"
+    description: >
+      B2B SaaS sales experience — understanding of SaaS metrics, sales cycles, and buyer personas.
+      10 = Deep B2B SaaS background, understands ARR/MRR, multi-stakeholder deals, enterprise cycles.
+      7-9 = Solid SaaS sales experience across multiple companies, familiar with key metrics.
+      4-6 = Some SaaS exposure but limited depth, or strong sales in adjacent industries.
+      1-3 = No SaaS sales experience, only traditional or non-recurring-revenue sales.
+
+  - name: "genai_knowledge"
+    description: >
+      Understanding of GenAI, LLMs, and AI workflows — ability to discuss value propositions credibly.
+      10 = Deep GenAI knowledge, can articulate LLM use cases, understands technical differentiators.
+      7-9 = Good AI literacy, can translate capabilities into business value for prospects.
+      4-6 = General awareness of AI trends but limited depth on GenAI specifics.
+      1-3 = No AI knowledge, cannot discuss AI products beyond surface-level marketing.
+
+  - name: "communication_skills"
+    description: >
+      Written and verbal communication — email copy, presentation ability, professional presence.
+      10 = Exceptional communicator, compelling email copy, strong presenter, polished professional.
+      7-9 = Strong communication across channels, good writing, comfortable presenting.
+      4-6 = Adequate communication skills but nothing distinctive.
+      1-3 = Poor communication evidence, or resume itself demonstrates weak writing.
+
+  - name: "enterprise_networking"
+    description: >
+      Enterprise relationships and networking — access to decision-makers, Fortune 500 connections.
+      10 = Deep Fortune 500 network, established relationships with enterprise buyers, warm intro ability.
+      7-9 = Good enterprise network, has sold into large organizations, some executive access.
+      4-6 = Some enterprise contacts but mostly SMB network, limited executive relationships.
+      1-3 = No enterprise network, only worked with small businesses or consumers.
+
+  - name: "process_iteration"
+    description: >
+      Process improvement — testing messaging, iterating on approaches, data-driven optimization.
+      10 = Built and optimized outbound processes, A/B tested messaging, data-driven approach.
+      7-9 = Evidence of iterating on approach, improving response rates, process-minded.
+      4-6 = Some process awareness but limited evidence of systematic optimization.
+      1-3 = No evidence of process thinking, ad-hoc approach only.
+
+  - name: "startup_fit"
+    description: >
+      Startup readiness — pace, ambiguity tolerance, wearing multiple hats, self-direction.
+      10 = Multiple early-stage startup roles, built BDR function from scratch, thrives in chaos.
+      7-9 = Startup experience, demonstrated adaptability and initiative.
+      4-6 = Mix of startup and larger company, some adaptability signals.
+      1-3 = Only large-company experience, may need heavy structure and process.
+
+  - name: "hustle_drive"
+    description: >
+      Work ethic and drive — hustle signals, competitiveness, going above and beyond.
+      10 = Exceptional drive — side projects, exceeded quotas significantly, athlete/competition background.
+      7-9 = Strong work ethic evidence, consistently hit/exceeded targets, proactive.
+      4-6 = Adequate work ethic but limited evidence of going above and beyond.
+      1-3 = No hustle signals, appears to do minimum required, no ambition markers.
+
+  - name: "authenticity_signal"
+    description: >
+      Resume authenticity and specificity — do claims ring true and hold up to scrutiny?
+      10 = Specific quota numbers, named accounts, verifiable wins, coherent career progression.
+      7-9 = Mostly specific with metrics, few generic claims, believable sales narrative.
+      4-6 = Mixed specificity, some boilerplate but plausible overall.
+      1-3 = Obvious keyword stuffing, inflated titles, or fabricated-looking accomplishments.
+
+location_preference:
+  preferred_countries: ["United States", "Canada"]
+  preference_description: "Prefer US/Canada based candidates. International candidates with exceptional qualifications still considered."
+
+triage:
+  model: "claude-sonnet-4-6"
+  score_threshold: 4
+
+report:
+  min_score: 60
+  exclude_tiers: ["Tier 4 – Pass"]
+
+deep_evaluation:
+  model: "claude-opus-4-6"
+
+synthesis:
+  model: "claude-opus-4-6"
+  top_n_for_interview_questions: 8

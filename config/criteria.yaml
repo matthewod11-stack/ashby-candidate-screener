@@ -1,0 +1,46 @@
+role:
+  title: "Staff Backend Engineer"
+  application_date_cutoff: "2026-01-01"
+
+criteria:
+  must_have:
+    - "6+ years backend engineering, Staff level or tech lead"
+    - "Deep SSO/SAML/OIDC expertise — built or owned, not just consumed"
+    - "Python + FastAPI"
+    - "Distributed systems, database architecture, scaling"
+
+  strong_signals:
+    - "Strong educational background or self-taught with a clear track record"
+    - "Well-known companies that have been through growth stages, not enormous"
+    - "Experience at AI/ML companies"
+    - "Ownership signals: side projects, open-source contributions, demonstrated initiative"
+    - "Mission alignment with an AI-first product"
+
+  red_flags:
+    - "Resume language copies job posting verbatim"
+    - "Every role has identical keyword patterns"
+    - "Claims that don't match timeline or company history"
+    - "Intern/junior roles listing staff-level responsibilities"
+
+scoring_dimensions:
+  - python_fastapi
+  - sso_saml_oidc
+  - distributed_systems
+  - postgres_sql
+  - aws_cloud
+  - docker_k8s
+  - stripe_billing
+  - technical_leadership
+  - startup_fit
+  - authenticity_signal
+
+triage:
+  model: "claude-sonnet-4-6"
+  score_threshold: 3  # 1-5 scale, 3+ passes to deep evaluation
+
+deep_evaluation:
+  model: "claude-opus-4-6"
+
+synthesis:
+  model: "claude-opus-4-6"
+  top_n_for_interview_questions: 8

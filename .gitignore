@@ -1,0 +1,13 @@
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+.venv/
+.DS_Store
+data/
+data/pdfs/
+data/reports/
+data/roles/
+*.pdf
+slack_summary.json

@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% if multi_role %}{{ company_name }} — Candidate Report{% else %}{{ role_title }} — Candidate Report{% endif %}</title>
+<style>
+/* ── Reset & Base ─────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  color: #1a1a2e;
+  background: #f5f6f8;
+  scroll-behavior: smooth;
+}
+
+body { padding: 0 0 4rem; }
+
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Layout ───────────────────────────────────────────── */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 1.25rem; }
+
+/* ── Header ───────────────────────────────────────────── */
+.report-header {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: #fff;
+  padding: 2.5rem 0 2rem;
+  margin-bottom: 2rem;
+}
+.report-header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+.report-header .meta {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin-bottom: 1.25rem;
+}
+
+/* Stats bar */
+.stats-bar {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.stat-item {
+  background: rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 0.75rem 1.25rem;
+  min-width: 130px;
+}
+.stat-item .stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+.stat-item .stat-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+}
+
+/* ── Role Tabs ──────────────────────────────────────── */
+.role-tabs {
+  display: flex;
+  gap: 0;
+  background: rgba(255,255,255,0.06);
+  border-radius: 8px;
+  overflow: hidden;
+  overflow-x: auto;
+  margin-top: 1.25rem;
+}
+.role-tab {
+  padding: 0.6rem 1.25rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8;
+  border: none;
+  background: none;
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.role-tab:hover { color: #fff; background: rgba(255,255,255,0.08); }
+.role-tab.active {
+  color: #fff;
+  background: rgba(255,255,255,0.15);
+  border-bottom: 2px solid #60a5fa;
+}
+.role-section { display: none; }
+.role-section.active { display: block; }
+.role-section .stats-bar .stat-item {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.role-section .stats-bar .stat-item .stat-value { color: #1a1a2e; }
+.role-section .stats-bar .stat-item .stat-label { color: #64748b; }
+
+/* ── Section headers ──────────────────────────────────── */
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 2rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+/* ── Tier colors ──────────────────────────────────────── */
+.tier-1 { --tier-color: #059669; --tier-bg: #ecfdf5; }
+.tier-2 { --tier-color: #2563eb; --tier-bg: #eff6ff; }
+.tier-3 { --tier-color: #d97706; --tier-bg: #fffbeb; }
+.tier-4 { --tier-color: #dc2626; --tier-bg: #fef2f2; }
+
+/* ── Badges ───────────────────────────────────────────── */
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  vertical-align: middle;
+  line-height: 1.5;
+}
+.badge-new    { background: #dbeafe; color: #1e40af; }
+.badge-return { background: #e5e7eb; color: #4b5563; }
+.badge-archived { background: #fef2f2; color: #991b1b; }
+.badge-active { background: #f0fdf4; color: #166534; }
+.badge-lead   { background: #fefce8; color: #854d0e; }
+
+.badge-tier {
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: var(--tier-bg);
+  color: var(--tier-color);
+  border: 1px solid var(--tier-color);
+}
+
+.badge-score {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Recommendation colors */
+.rec-strong-hire { background: #059669; color: #fff; }
+.rec-hire        { background: #2563eb; color: #fff; }
+.rec-lean-hire   { background: #d97706; color: #fff; }
+.rec-maybe       { background: #eab308; color: #1a1a2e; }
+.rec-no-hire     { background: #dc2626; color: #fff; }
+
+/* Score badge bg by tier */
+.score-bg-1 { background: #059669; }
+.score-bg-2 { background: #2563eb; }
+.score-bg-3 { background: #d97706; }
+.score-bg-4 { background: #dc2626; }
+
+/* ── Ranking Table ────────────────────────────────────── */
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 2rem;
+}
+.ranking-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.ranking-table thead th {
+  background: #f8fafc;
+  text-align: left;
+  padding: 0.7rem 0.85rem;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+  white-space: nowrap;
+  border-bottom: 2px solid #e2e8f0;
+}
+.ranking-table tbody td {
+  padding: 0.65rem 0.85rem;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+.ranking-table tbody tr.candidate-row:nth-child(4n+1) { background: #fafbfc; }
+.ranking-table tbody tr.candidate-row:nth-child(4n+3) { background: #fafbfc; }
+
+/* ── Expandable detail rows ──────────────────────────── */
+.candidate-row { cursor: pointer; }
+.candidate-row:hover { background: #f0f4ff !important; }
+.candidate-row .expand-arrow {
+  display: inline-block;
+  transition: transform 0.2s;
+  font-size: 0.7rem;
+  color: #94a3b8;
+  margin-right: 0.3rem;
+}
+.candidate-row.expanded .expand-arrow { transform: rotate(90deg); }
+.candidate-detail-row { display: none; }
+.candidate-detail-row.open { display: table-row; }
+.candidate-detail-row > td {
+  padding: 0 !important;
+  border-bottom: 2px solid #e2e8f0;
+}
+.detail-inner {
+  padding: 1.25rem;
+  background: #f8fafc;
+}
+
+.candidate-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.candidate-name-cell a { font-weight: 600; color: #1a1a2e; }
+.candidate-name-cell a:hover { color: #2563eb; }
+
+.ext-link {
+  display: inline-flex;
+  align-items: center;
+  color: #94a3b8;
+  margin-left: 0.25rem;
+  flex-shrink: 0;
+}
+.ext-link:hover { color: #2563eb; }
+.ext-link svg { width: 14px; height: 14px; }
+
+.tier-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 0.4rem;
+  background: var(--tier-color);
+}
+
+.rec-pill {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ── Candidate Detail Cards ───────────────────────────── */
+.card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  border: 1px solid #e2e8f0;
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+.card-header h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+.card-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.4rem 1.5rem;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  color: #475569;
+}
+.card-meta strong { color: #1a1a2e; }
+
+.card-section { margin-bottom: 0.85rem; }
+.card-section-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+.card-section p { font-size: 0.875rem; color: #334155; }
+
+.card-flags {
+  background: #fef2f2;
+  border-left: 3px solid #dc2626;
+  padding: 0.6rem 0.85rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #991b1b;
+}
+.card-flags.no-flags {
+  background: #f0fdf4;
+  border-left-color: #059669;
+  color: #166534;
+}
+
+/* Skills bars in card */
+.card-skills {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.skill-bar-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+.skill-bar-label {
+  width: 110px;
+  flex-shrink: 0;
+  text-align: right;
+  color: #64748b;
+  font-size: 0.75rem;
+}
+.skill-bar-track {
+  flex: 1;
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+  min-width: 60px;
+}
+.skill-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+.skill-bar-value {
+  width: 1.5rem;
+  text-align: right;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: #1a1a2e;
+}
+/* Authenticity signal special color */
+.skill-bar-fill.authenticity { background: linear-gradient(90deg, #dc2626, #eab308, #059669); }
+.skill-bar-fill.standard { background: #2563eb; }
+
+/* Collapsible interview questions */
+.iq-toggle {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #2563eb;
+  margin-bottom: 0.4rem;
+  border: none;
+  background: none;
+  padding: 0;
+}
+.iq-toggle:hover { text-decoration: underline; }
+.iq-toggle .arrow { transition: transform 0.2s; display: inline-block; }
+.iq-content { display: none; }
+.iq-content.open { display: block; }
+.iq-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.iq-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.85rem;
+}
+.iq-list li:last-child { border-bottom: none; }
+.iq-list .iq-focus {
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 0.15rem;
+}
+.iq-list .iq-question { color: #475569; }
+
+.back-to-top {
+  display: inline-block;
+  font-size: 0.8rem;
+  margin-top: 0.75rem;
+  color: #94a3b8;
+}
+.back-to-top:hover { color: #2563eb; }
+
+/* ── Skills Heatmap ───────────────────────────────────── */
+.heatmap-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 2rem;
+}
+.heatmap {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.heatmap thead th {
+  background: #f8fafc;
+  padding: 0.6rem 0.5rem;
+  font-weight: 600;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #64748b;
+  border-bottom: 2px solid #e2e8f0;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+}
+.heatmap thead th:hover { background: #eef2ff; }
+.heatmap thead th .sort-arrow {
+  font-size: 0.6rem;
+  margin-left: 0.2rem;
+  opacity: 0.3;
+}
+.heatmap thead th.sorted-asc .sort-arrow,
+.heatmap thead th.sorted-desc .sort-arrow { opacity: 1; }
+.heatmap thead th.authenticity-col {
+  background: #f0fdf4;
+  border-bottom-color: #059669;
+}
+.heatmap tbody td {
+  padding: 0.45rem 0.5rem;
+  text-align: center;
+  border-bottom: 1px solid #f1f5f9;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+.heatmap tbody td.name-cell {
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.heatmap tbody td.rank-cell {
+  text-align: center;
+  color: #64748b;
+  font-weight: 500;
+}
+.heatmap tbody tr:nth-child(even) { background: #fafbfc; }
+.heatmap tbody tr:hover { background: #f0f4ff; }
+
+/* Heatmap cell colors — blue scale */
+.heat-1  { background: #eff6ff; color: #64748b; }
+.heat-2  { background: #dbeafe; color: #475569; }
+.heat-3  { background: #bfdbfe; color: #334155; }
+.heat-4  { background: #93c5fd; color: #1e3a5f; }
+.heat-5  { background: #60a5fa; color: #fff; }
+.heat-6  { background: #3b82f6; color: #fff; }
+.heat-7  { background: #2563eb; color: #fff; }
+.heat-8  { background: #1d4ed8; color: #fff; }
+.heat-9  { background: #1e40af; color: #fff; }
+.heat-10 { background: #1e3a8a; color: #fff; }
+
+/* Authenticity column — green/red scale */
+.auth-1  { background: #fef2f2; color: #991b1b; }
+.auth-2  { background: #fee2e2; color: #991b1b; }
+.auth-3  { background: #fecaca; color: #991b1b; }
+.auth-4  { background: #fde68a; color: #78350f; }
+.auth-5  { background: #fde047; color: #78350f; }
+.auth-6  { background: #bef264; color: #365314; }
+.auth-7  { background: #86efac; color: #14532d; }
+.auth-8  { background: #4ade80; color: #14532d; }
+.auth-9  { background: #22c55e; color: #fff; }
+.auth-10 { background: #16a34a; color: #fff; }
+
+/* ── Footer ───────────────────────────────────────────── */
+.report-footer {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  padding: 2rem 0 1rem;
+  border-top: 1px solid #e2e8f0;
+  margin-top: 2rem;
+}
+
+/* ── Print styles ─────────────────────────────────────── */
+@media print {
+  html { font-size: 12px; }
+  body { padding: 0; background: #fff; }
+  .report-header { background: #1a1a2e !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .stat-item { background: rgba(255,255,255,0.12) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+  .candidate-detail-row { display: table-row !important; }
+  .candidate-row .expand-arrow { display: none; }
+  .back-to-top { display: none; }
+  .heatmap thead th { cursor: default; }
+  .heatmap tbody td, .heatmap thead th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .ranking-table tbody td, .ranking-table thead th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .badge, .rec-pill, .badge-tier, .badge-score { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+/* ── Responsive ───────────────────────────────────────── */
+@media (max-width: 768px) {
+  .report-header h1 { font-size: 1.3rem; }
+  .stats-bar { gap: 0.75rem; }
+  .stat-item { min-width: 100px; padding: 0.5rem 0.85rem; }
+  .stat-item .stat-value { font-size: 1.2rem; }
+  .card-meta { grid-template-columns: 1fr; }
+  .card-skills { grid-template-columns: 1fr; }
+  .section-title { font-size: 1.1rem; }
+}
+
+@media (max-width: 480px) {
+  .container { padding: 0 0.75rem; }
+  .report-header { padding: 1.5rem 0 1.25rem; }
+  .stats-bar { flex-direction: column; gap: 0.5rem; }
+}
+</style>
+</head>
+<body id="top">
+
+{# ═══════ MACRO: Expandable ranking table ═══════ #}
+{% macro candidate_table(candidate_list, dims) %}
+{% if candidate_list %}
+<div class="table-wrap">
+  <table class="ranking-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Candidate</th>
+        <th>Applied</th>
+        <th>Tier</th>
+        <th>Current Role</th>
+        <th>Exp</th>
+        <th>Score</th>
+        <th>Recommendation</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in candidate_list %}
+      {% set tier_num = c.final_tier.split()[1] | int if c.final_tier.split()[1] is defined else 1 %}
+      {% set rec_lower = c.evaluated.recommendation | lower | replace(" ", "-") %}
+      <tr class="candidate-row tier-{{ tier_num }}" onclick="toggleDetail(this)">
+        <td><span class="expand-arrow">&#9654;</span> {{ c.final_rank }}</td>
+        <td>
+          <div class="candidate-name-cell">
+            <span style="font-weight:600;">{{ c.evaluated.candidate.name }}</span>
+            {% set cstatus = c.evaluated.candidate.status|default('') %}
+            {% if cstatus == 'Archived' %}<span class="badge badge-archived">Archived</span>{% endif %}
+            {% if cstatus == 'Lead' %}<span class="badge badge-lead">Lead</span>{% endif %}
+            <a class="ext-link" href="{{ c.evaluated.candidate.profile_url }}" target="_blank" rel="noopener" title="{{ profile_label }}" onclick="event.stopPropagation()">
+              <svg viewBox="0 0 20 20" fill="currentColor"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"/><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"/></svg>
+            </a>
+          </div>
+        </td>
+        <td style="font-size:0.82rem; white-space:nowrap; color:#64748b;">{{ c.evaluated.candidate.application_date[:10] }}</td>
+        <td>
+          <span class="tier-dot" style="background:var(--tier-color)"></span>
+          {{ c.final_tier }}
+        </td>
+        <td style="font-size:0.82rem;">{{ c.evaluated.current_role }}</td>
+        <td>{{ c.evaluated.years_experience }}</td>
+        <td><strong>{{ c.final_score }}</strong></td>
+        <td><span class="rec-pill {{ 'rec-' ~ rec_lower }}">{{ c.evaluated.recommendation }}</span></td>
+      </tr>
+      <tr class="candidate-detail-row">
+        <td colspan="8">
+          <div class="detail-inner">
+            <div class="card-meta">
+              <div><strong>Current:</strong> {{ c.evaluated.current_role }}</div>
+              <div><strong>Prior:</strong> {{ c.evaluated.prior_role }}</div>
+              <div><strong>Education:</strong> {{ c.evaluated.education }}</div>
+              <div><strong>Experience:</strong> {{ c.evaluated.years_experience }}</div>
+              <div><strong>Applied:</strong> {{ c.evaluated.candidate.application_date[:10] }}</div>
+              <div><strong>Location:</strong> {{ c.evaluated.candidate.location_summary|default('Unknown') }}</div>
+              <div><strong>Ashby Status:</strong> {{ c.evaluated.candidate.status|default('Unknown') }} — {{ c.evaluated.candidate.ashby_stage|default('') }}</div>
+            </div>
+            <div class="card-section">
+              <div class="card-section-label">Key Strengths</div>
+              <p>{{ c.evaluated.key_strengths }}</p>
+            </div>
+            <div class="card-section">
+              <div class="card-section-label">Key Concerns</div>
+              <p>{{ c.evaluated.key_concerns }}</p>
+            </div>
+            <div class="card-section">
+              <div class="card-section-label">Culture Fit</div>
+              <p>{{ c.evaluated.culture_fit }}</p>
+            </div>
+            {% if c.evaluated.flags and c.evaluated.flags != "None" %}
+            <div class="card-flags">{{ c.evaluated.flags }}</div>
+            {% else %}
+            <div class="card-flags no-flags">No flags</div>
+            {% endif %}
+            <div class="card-section" style="margin-top:1rem;">
+              <div class="card-section-label">Skills Matrix</div>
+              <div class="card-skills">
+                {% for dim in dims %}
+                {% set val = c.evaluated.skills_matrix.get(dim, 0) if c.evaluated.skills_matrix is mapping else 0 %}
+                {% set pct = val * 10 %}
+                <div class="skill-bar-item">
+                  <span class="skill-bar-label">{{ dim | replace("_"," ") | title }}</span>
+                  <div class="skill-bar-track">
+                    <div class="skill-bar-fill {{ 'authenticity' if dim == 'authenticity_signal' else 'standard' }}" style="width:{{ pct }}%"></div>
+                  </div>
+                  <span class="skill-bar-value">{{ val }}</span>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            {% if c.interview_questions %}
+            <div class="card-section" style="margin-top:1rem;">
+              <div class="card-section-label">Interview Questions ({{ c.interview_questions | length }})</div>
+              <ul class="iq-list">
+                {% for q in c.interview_questions %}
+                <li>
+                  <div class="iq-focus">{{ q.focus }}</div>
+                  <div class="iq-question">{{ q.question }}</div>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<p style="color:#94a3b8; font-style:italic; padding:0.5rem 0;">No candidates in this category.</p>
+{% endif %}
+{% endmacro %}
+
+<!-- ════════════════════════════════════════════════════════
+     HEADER
+     ════════════════════════════════════════════════════════ -->
+<header class="report-header">
+  <div class="container">
+    {% if multi_role %}
+    <h1>{{ company_name }} — Candidate Report</h1>
+    <div class="meta">Generated {{ generated_date }}</div>
+    {% set total_candidates = roles | sum(attribute='total_qualified') %}
+    {% set total_screened_all = roles | sum(attribute='total_screened') %}
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-value">{{ roles | length }}</div>
+        <div class="stat-label">Roles</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">{{ total_screened_all }}</div>
+        <div class="stat-label">Total Screened</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">{{ total_candidates }}</div>
+        <div class="stat-label">Total Qualified</div>
+      </div>
+    </div>
+    <div class="role-tabs">
+      {% for role in roles %}
+      <button class="role-tab {% if loop.first %}active{% endif %}"
+              onclick="switchRole('{{ role.slug }}')"
+              data-role="{{ role.slug }}">
+        {{ role.title }} ({{ role.total_qualified }})
+      </button>
+      {% endfor %}
+    </div>
+    {% else %}
+    <h1>{{ role_title }} — Candidate Report</h1>
+    <div class="meta">
+      Generated {{ generated_date }} | Candidates from {{ date_range }}
+    </div>
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-value">{{ total_screened }}</div>
+        <div class="stat-label">Total Screened</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">{{ total_qualified }}</div>
+        <div class="stat-label">Qualified</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">{{ total_screened - total_qualified }}</div>
+        <div class="stat-label">Unqualified</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">{{ new_count }}</div>
+        <div class="stat-label">New This Week</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">{{ returning_count }}</div>
+        <div class="stat-label">Returning</div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</header>
+
+<main class="container">
+
+{% if multi_role %}
+{# ═══════ MULTI-ROLE MODE ═══════ #}
+{% for role in roles %}
+<div class="role-section {% if loop.first %}active{% endif %}" id="role-{{ role.slug }}">
+
+  <!-- Role-level stats -->
+  <div class="stats-bar" style="margin-bottom:1.5rem;">
+    <div class="stat-item">
+      <div class="stat-value">{{ role.total_screened }}</div>
+      <div class="stat-label">Total Screened</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">{{ role.total_qualified }}</div>
+      <div class="stat-label">Qualified</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">{{ role.new_count }}</div>
+      <div class="stat-label">New This Week</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">{{ role.returning_count }}</div>
+      <div class="stat-label">Returning</div>
+    </div>
+  </div>
+
+  <!-- Ranking Tables: New then Returning -->
+  {% set new_cands = role.candidates | selectattr("is_new") | list %}
+  {% set ret_cands = role.candidates | rejectattr("is_new") | list %}
+
+  <h2 class="section-title">New Candidates ({{ new_cands | length }})</h2>
+  {{ candidate_table(new_cands, role.scoring_dimensions) }}
+
+  <h2 class="section-title">Returning Candidates ({{ ret_cands | length }})</h2>
+  {{ candidate_table(ret_cands, role.scoring_dimensions) }}
+
+  <!-- Skills Matrix Heatmap -->
+  <h2 class="section-title">Skills Matrix Heatmap</h2>
+  <div class="heatmap-wrap">
+    <table class="heatmap" id="heatmap-{{ role.slug }}">
+      <thead>
+        <tr>
+          <th data-col="rank"># <span class="sort-arrow"></span></th>
+          <th data-col="name">Candidate <span class="sort-arrow"></span></th>
+          {% for dim in role.scoring_dimensions %}
+          <th data-col="{{ loop.index0 }}"
+              class="{{ 'authenticity-col' if dim == 'authenticity_signal' else '' }}">
+            {{ dim | replace("_"," ") | title | truncate(12, True, "..") }}
+            <span class="sort-arrow"></span>
+          </th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in role.candidates %}
+        <tr>
+          <td class="rank-cell">{{ c.final_rank }}</td>
+          <td class="name-cell">{{ c.evaluated.candidate.name }}</td>
+          {% for dim in role.scoring_dimensions %}
+          {% set val = c.evaluated.skills_matrix.get(dim, 0) if c.evaluated.skills_matrix is mapping else 0 %}
+          {% if dim == "authenticity_signal" %}
+          <td class="auth-{{ val }}">{{ val }}</td>
+          {% else %}
+          <td class="heat-{{ val }}">{{ val }}</td>
+          {% endif %}
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endfor %}
+
+{% else %}
+{# ═══════ SINGLE-ROLE MODE (backward compat) ═══════ #}
+
+<!-- ════════════════════════════════════════════════════════
+     RANKING TABLE
+     ════════════════════════════════════════════════════════ -->
+{% set new_cands = candidates | selectattr("is_new") | list %}
+{% set ret_cands = candidates | rejectattr("is_new") | list %}
+
+<h2 class="section-title">New Candidates ({{ new_cands | length }})</h2>
+{{ candidate_table(new_cands, scoring_dimensions) }}
+
+<h2 class="section-title">Returning Candidates ({{ ret_cands | length }})</h2>
+{{ candidate_table(ret_cands, scoring_dimensions) }}
+
+<!-- ════════════════════════════════════════════════════════
+     SKILLS MATRIX HEATMAP
+     ════════════════════════════════════════════════════════ -->
+<h2 class="section-title">Skills Matrix Heatmap</h2>
+
+<div class="heatmap-wrap">
+  <table class="heatmap" id="heatmap-table">
+    <thead>
+      <tr>
+        <th data-col="rank"># <span class="sort-arrow"></span></th>
+        <th data-col="name">Candidate <span class="sort-arrow"></span></th>
+        {% for dim in scoring_dimensions %}
+        <th data-col="{{ loop.index0 }}"
+            class="{{ 'authenticity-col' if dim == 'authenticity_signal' else '' }}">
+          {{ dim | replace("_"," ") | title | truncate(12, True, "..") }}
+          <span class="sort-arrow"></span>
+        </th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in candidates %}
+      <tr>
+        <td class="rank-cell">{{ c.final_rank }}</td>
+        <td class="name-cell">{{ c.evaluated.candidate.name }}</td>
+        {% for dim in scoring_dimensions %}
+        {% set val = c.evaluated.skills_matrix.get(dim, 0) if c.evaluated.skills_matrix is mapping else 0 %}
+        {% if dim == "authenticity_signal" %}
+        <td class="auth-{{ val }}">{{ val }}</td>
+        {% else %}
+        <td class="heat-{{ val }}">{{ val }}</td>
+        {% endif %}
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endif %}
+
+</main>
+
+<!-- ════════════════════════════════════════════════════════
+     FOOTER
+     ════════════════════════════════════════════════════════ -->
+<footer class="report-footer">
+  <div class="container">
+    Generated by Ashby Candidate Ranking Pipeline on {{ generated_date }}
+  </div>
+</footer>
+
+<!-- ════════════════════════════════════════════════════════
+     INLINE JAVASCRIPT — Heatmap sorting + collapsible IQs
+     ════════════════════════════════════════════════════════ -->
+<script>
+(function() {
+  /* ── Role tab switching (multi-role mode) ───────────── */
+  window.switchRole = function(slug) {
+    document.querySelectorAll('.role-section').forEach(function(s) { s.classList.remove('active'); });
+    document.querySelectorAll('.role-tab').forEach(function(t) { t.classList.remove('active'); });
+    var section = document.getElementById('role-' + slug);
+    if (section) section.classList.add('active');
+    var tab = document.querySelector('.role-tab[data-role="' + slug + '"]');
+    if (tab) tab.classList.add('active');
+  };
+
+  /* ── Expandable detail row toggle ────────────────────── */
+  window.toggleDetail = function(row) {
+    var detailRow = row.nextElementSibling;
+    if (!detailRow || !detailRow.classList.contains('candidate-detail-row')) return;
+    var isOpen = detailRow.classList.toggle('open');
+    row.classList.toggle('expanded', isOpen);
+  };
+
+  /* ── Heatmap sorting (supports multiple tables) ─────── */
+  var ARROW_UP = '\u25B2';
+  var ARROW_DOWN = '\u25BC';
+
+  function initHeatmapSort(table) {
+    var sortState = { col: null, dir: 'asc' };
+    var ths = table.querySelectorAll('thead th');
+
+    for (var k = 0; k < ths.length; k++) {
+      var sa = ths[k].querySelector('.sort-arrow');
+      if (sa) sa.textContent = ARROW_UP;
+    }
+
+    for (var h = 0; h < ths.length; h++) {
+      (function(idx) {
+        ths[idx].addEventListener('click', function() { sortBy(idx); });
+      })(h);
+    }
+
+    function sortBy(thIndex) {
+      var tbody = table.querySelector('tbody');
+      var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr'));
+
+      if (sortState.col === thIndex) {
+        sortState.dir = sortState.dir === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortState.dir = thIndex === 1 ? 'asc' : thIndex === 0 ? 'asc' : 'desc';
+        sortState.col = thIndex;
+      }
+
+      for (var i = 0; i < ths.length; i++) {
+        ths[i].classList.remove('sorted-asc', 'sorted-desc');
+        var arr = ths[i].querySelector('.sort-arrow');
+        if (arr) arr.textContent = ARROW_UP;
+      }
+
+      ths[thIndex].classList.add('sorted-' + sortState.dir);
+      var curArr = ths[thIndex].querySelector('.sort-arrow');
+      if (curArr) curArr.textContent = sortState.dir === 'asc' ? ARROW_UP : ARROW_DOWN;
+
+      rows.sort(function(a, b) {
+        var aVal, bVal;
+        if (thIndex === 1) {
+          aVal = a.cells[1].textContent.trim().toLowerCase();
+          bVal = b.cells[1].textContent.trim().toLowerCase();
+          return sortState.dir === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+        }
+        aVal = parseInt(a.cells[thIndex].textContent, 10) || 0;
+        bVal = parseInt(b.cells[thIndex].textContent, 10) || 0;
+        return sortState.dir === 'asc' ? aVal - bVal : bVal - aVal;
+      });
+
+      for (var j = 0; j < rows.length; j++) {
+        tbody.appendChild(rows[j]);
+      }
+    }
+  }
+
+  // Initialize sorting on all heatmap tables
+  var heatmaps = document.querySelectorAll('table.heatmap');
+  for (var t = 0; t < heatmaps.length; t++) {
+    initHeatmapSort(heatmaps[t]);
+  }
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,180 @@
+company:
+  name: "Acme AI"  # replace with your company
+  description: "a fast-growing AI startup"
+
+ats:
+  profile_label: "View in Ashby"
+
+role:
+  title: "Forward Deployed AI Engineer"
+  slug: "fde"
+  ashby_job_title: "Forward Deployed AI Engineer"
+  application_date_cutoff: "2026-01-01"
+  jd_file: "fde.md"
+
+criteria:
+  must_have:
+    - "3+ years of experience in data science, software development, or generative AI"
+    - "Enterprise account experience, preferably Fortune 500 — managing strategic relationships"
+    - "Expertise in AI/ML, RAG pipelines, LLM workflows, and enterprise data analytics"
+    - "Eagerness to build a business in a fast-paced environment"
+
+  strong_signals:
+    - "Full-stack ability — Python backend plus React/Next.js/TypeScript frontend"
+    - "Conference talks, published research, or technical evangelism experience"
+    - "Enterprise relationships — existing Fortune 500 network or large account management"
+    - "Technical presales or solutions engineering background — demos, proposals, stakeholder pitches"
+    - "Codebase contribution evidence — open source, or mentions contributing to product codebases"
+    - "Go-to-market instinct — understands commercial dynamics, not just engineering"
+
+  red_flags:
+    - "No technical depth — purely sales or business development with no engineering substance"
+    - "Pure engineering with no customer-facing, presales, or enterprise engagement experience"
+    - "Resume language copies job posting verbatim — keyword stuffing without substance"
+    - "No AI/ML experience — traditional software engineering only with no GenAI exposure"
+
+triage_dimensions:
+  - label: "Engineering Experience (Python/AI/ML)"
+    description: >
+      Score 1-5 based on depth and breadth of engineering experience, especially in Python and AI/ML.
+      5 = 5+ years engineering with deep Python, AI/ML in production, built complex systems.
+      4 = 3+ years with solid Python and AI/ML portfolio, production deployment experience.
+      3 = Engineering background with some AI/ML exposure but limited production AI work.
+      2 = Junior engineer or limited technical depth, mostly non-AI development.
+      1 = No meaningful engineering experience, or purely academic/theoretical.
+
+  - label: "RAG/LLM Expertise"
+    description: >
+      Score 1-5 based on hands-on experience with RAG pipelines, LLM workflows, and GenAI.
+      5 = Built production RAG systems, deep LLM workflow experience, understands embedding/retrieval trade-offs.
+      4 = Significant GenAI project experience, worked with RAG or LLM pipelines in production.
+      3 = Some LLM/GenAI project experience but limited RAG-specific work.
+      2 = Basic GenAI awareness, used APIs but hasn't built production workflows.
+      1 = No GenAI or LLM experience, traditional ML/data science only.
+
+  - label: "Enterprise Account Management"
+    description: >
+      Score 1-5 based on experience managing strategic enterprise accounts and relationships.
+      5 = Managed Fortune 500 accounts, multi-stakeholder relationships, drove large contract value.
+      4 = Regular enterprise engagement, managed strategic accounts, navigated complex organizations.
+      3 = Some enterprise exposure but mostly mid-market or startup clients.
+      2 = Limited client-facing experience, mostly internal engineering.
+      1 = No enterprise or client-facing experience whatsoever.
+
+  - label: "Technical Presales"
+    description: >
+      Score 1-5 based on ability to demo products, write proposals, and pitch to technical stakeholders.
+      5 = Expert presales engineer — product demos, technical proposals, closed enterprise deals.
+      4 = Regular technical demos and proposals, comfortable with stakeholder presentations.
+      3 = Some presales elements but primarily engineering-focused career.
+      2 = Limited presentation or demo experience, mostly behind-the-scenes.
+      1 = No evidence of technical presales, demos, or stakeholder engagement.
+
+  - label: "Authenticity Gut Check"
+    description: >
+      Score 1-5 based on how genuine, specific, and coherent the resume narrative feels.
+      5 = Highly specific accomplishments with metrics, unique project details, coherent career arc.
+      4 = Mostly specific, a few generic phrases but overall authentic and believable.
+      3 = Mixed — some specific details but also boilerplate technology language.
+      2 = Mostly generic buzzwords, vague enterprise claims, suspiciously broad scope.
+      1 = Obvious keyword stuffing, copied from JD, or fabricated-looking accomplishments.
+
+scoring_dimensions:
+  - name: "ai_ml_expertise"
+    description: >
+      AI/ML depth — model training, deployment, evaluation, understanding of ML lifecycle.
+      10 = Built and deployed production ML systems, deep model evaluation, published research.
+      7-9 = Strong hands-on ML experience, production deployment, good understanding of trade-offs.
+      4-6 = Some ML project work but limited production deployment or depth.
+      1-3 = No meaningful ML experience, only used pre-built APIs or basic tutorials.
+
+  - name: "rag_llm_workflows"
+    description: >
+      RAG pipeline and LLM workflow expertise — retrieval, embedding, orchestration, prompt engineering.
+      10 = Architected production RAG systems, deep retrieval/embedding expertise, prompt optimization.
+      7-9 = Built RAG pipelines or LLM workflows in production, good understanding of components.
+      4-6 = Some GenAI project experience, used LLM APIs but limited pipeline architecture.
+      1-3 = No RAG or LLM workflow experience.
+
+  - name: "python_development"
+    description: >
+      Python development proficiency — backend services, data pipelines, production code quality.
+      10 = Expert Python developer, architected production services, deep ecosystem knowledge.
+      7-9 = Strong Python in production, good coding practices, familiar with major frameworks.
+      4-6 = Functional Python skills, used for data science or scripting but limited production backend.
+      1-3 = Minimal Python experience or purely notebook/scripting usage.
+
+  - name: "react_typescript"
+    description: >
+      Frontend development — React, Next.js, TypeScript for building customer-facing applications.
+      10 = Expert React/TypeScript, built production Next.js apps, strong component architecture.
+      7-9 = Solid React/TypeScript experience, contributed to production frontends.
+      4-6 = Some frontend experience, basic React or JavaScript, learning TypeScript.
+      1-3 = No frontend experience, backend or data science only.
+
+  - name: "enterprise_accounts"
+    description: >
+      Enterprise account management — Fortune 500 relationships, strategic account development.
+      10 = Deep Fortune 500 portfolio, managed multi-million-dollar accounts, executive relationships.
+      7-9 = Regular enterprise engagement, strategic account management experience.
+      4-6 = Some enterprise exposure, managed mid-market accounts.
+      1-3 = No enterprise account experience, only worked with SMBs or internal teams.
+
+  - name: "technical_presales"
+    description: >
+      Technical presales — demos, proposals, technical discovery, proof-of-concept delivery.
+      10 = Expert presales engineer, led complex technical evaluations, high win rate.
+      7-9 = Regular technical demos and proposals, strong at translating requirements to solutions.
+      4-6 = Some demo or presentation experience but not primary role function.
+      1-3 = No presales, demo, or technical sales experience.
+
+  - name: "codebase_contribution"
+    description: >
+      Evidence of contributing to production codebases — open source, product engineering, PRs.
+      10 = Major open-source contributor, regular production codebase contributions, code review.
+      7-9 = Active codebase contributor, meaningful PRs, collaborative engineering culture.
+      4-6 = Some codebase contributions but mostly isolated or small-scope work.
+      1-3 = No evidence of contributing to shared codebases, works in isolation only.
+
+  - name: "go_to_market"
+    description: >
+      Go-to-market instinct — understands commercial dynamics, pipeline building, deal closing.
+      10 = Forecast and closed deals, built go-to-market strategies, understands unit economics.
+      7-9 = Good commercial awareness, helped with pipeline, understands sales motions.
+      4-6 = Some commercial exposure but primarily engineering-driven career.
+      1-3 = No commercial awareness, purely technical mindset with no GTM exposure.
+
+  - name: "startup_fit"
+    description: >
+      Startup readiness — pace, ambiguity tolerance, breadth, wearing multiple hats.
+      10 = Multiple early-stage roles, built functions from scratch, thrives in unstructured environments.
+      7-9 = Startup experience, demonstrated breadth and adaptability, comfortable with ambiguity.
+      4-6 = Mix of startup and larger company, some adaptability signals.
+      1-3 = Only large-company experience, narrow scope, may struggle with startup pace.
+
+  - name: "authenticity_signal"
+    description: >
+      Resume authenticity and specificity — do claims ring true and hold up to scrutiny?
+      10 = Highly specific, verifiable accomplishments, consistent narrative, unique project details.
+      7-9 = Mostly specific with metrics, few generic claims, coherent career story.
+      4-6 = Mixed specificity, some boilerplate but plausible overall.
+      1-3 = Obvious keyword stuffing, fabricated claims, or JD-copying patterns.
+
+location_preference:
+  preferred_countries: ["United States", "Canada"]
+  preference_description: "Prefer US/Canada based candidates. International candidates with exceptional qualifications still considered."
+
+triage:
+  model: "claude-sonnet-4-6"
+  score_threshold: 4
+
+report:
+  min_score: 60
+  exclude_tiers: ["Tier 4 – Pass"]
+
+deep_evaluation:
+  model: "claude-opus-4-6"
+
+synthesis:
+  model: "claude-opus-4-6"
+  top_n_for_interview_questions: 8

@@ -1,0 +1,175 @@
+company:
+  name: "Acme AI"  # replace with your company
+  description: "a fast-growing AI startup"
+
+ats:
+  profile_label: "View in Ashby"
+
+role:
+  title: "Staff Backend Engineer"
+  slug: "staff-backend-engineer"
+  ashby_job_title: "Staff Backend Engineer"
+  application_date_cutoff: "2026-01-01"
+  jd_file: "staff-backend-engineer.md"
+
+criteria:
+  must_have:
+    - "6+ years backend engineering, Staff level or tech lead"
+    - "Deep SSO/SAML/OIDC expertise — built or owned, not just consumed"
+    - "Python + FastAPI"
+    - "Distributed systems, database architecture, scaling"
+
+  strong_signals:
+    - "Strong educational background or self-taught with a clear track record"
+    - "Well-known companies that have been through growth stages, not enormous"
+    - "Experience at AI/ML companies"
+    - "Ownership signals: side projects, open-source contributions, demonstrated initiative"
+    - "Mission alignment with an AI-first product"
+
+  red_flags:
+    - "Resume language copies job posting verbatim"
+    - "Every role has identical keyword patterns"
+    - "Claims that don't match timeline or company history"
+    - "Intern/junior roles listing staff-level responsibilities"
+
+triage_dimensions:
+  - label: "Backend Experience & Seniority"
+    description: >
+      Score 1-5 based on depth and seniority of backend engineering experience.
+      5 = 8+ years with clear staff/principal-level ownership of complex production systems.
+      4 = 6+ years with tech lead or senior roles on high-scale backends.
+      3 = 4-6 years with solid backend experience but unclear seniority progression.
+      2 = 2-4 years or mostly mid-level roles without architecture ownership.
+      1 = Junior engineer, frontend-heavy, or no meaningful backend track record.
+
+  - label: "SSO/SAML/OIDC Signal"
+    description: >
+      Score 1-5 based on evidence of identity/auth infrastructure expertise.
+      5 = Built or owned SSO/SAML/OIDC systems from scratch, mentions IdP architecture.
+      4 = Significant work on enterprise auth integrations, mentions specific protocols.
+      3 = Some auth experience — integrated with existing SSO, worked on auth features.
+      2 = Mentions auth in passing, likely consumed but didn't build.
+      1 = No mention of identity, authentication, or authorization infrastructure.
+
+  - label: "Tech Stack Overlap"
+    description: >
+      Score 1-5 based on alignment with Python/FastAPI, Postgres, AWS, Docker/K8s stack.
+      5 = Direct match — Python + FastAPI, Postgres, AWS services, Docker/K8s in production.
+      4 = Strong overlap — Python backend, SQL databases, cloud infra, some containerization.
+      3 = Partial overlap — right language ecosystem but different frameworks/cloud providers.
+      2 = Adjacent stack — e.g., Node.js/Go backend, or Python but data science focused.
+      1 = Completely different ecosystem — Java enterprise, .NET, or no backend stack evident.
+
+  - label: "Company & Background Signal"
+    description: >
+      Score 1-5 based on caliber of companies, education, and growth-stage experience.
+      5 = Top-tier companies (well-known growth-stage startups, strong engineering brands), strong education.
+      4 = Strong companies with real engineering culture, good university, startup experience.
+      3 = Solid companies but nothing distinctive, decent education background.
+      2 = Mostly unknown companies, no standout education or career trajectory.
+      1 = No recognizable companies or education, unclear career progression.
+
+  - label: "Authenticity Gut Check"
+    description: >
+      Score 1-5 based on how genuine and specific the resume feels.
+      5 = Highly specific accomplishments with metrics, unique details, coherent narrative.
+      4 = Mostly specific, a few generic phrases but overall authentic feel.
+      3 = Mixed — some specific details but also boilerplate language.
+      2 = Mostly generic buzzwords, suspiciously broad claims, vague timelines.
+      1 = Obvious keyword stuffing, copy-paste from JD, fabricated-looking claims.
+
+scoring_dimensions:
+  - name: "python_fastapi"
+    description: >
+      Python backend development with FastAPI or equivalent modern async frameworks.
+      10 = Architect-level Python, built FastAPI services at scale, deep async expertise.
+      7-9 = Production FastAPI/Flask/Django experience, strong Python patterns, async proficiency.
+      4-6 = Python in production but limited framework depth, or strong in a different Python domain.
+      1-3 = Minimal Python experience or purely scripting/data science usage.
+
+  - name: "sso_saml_oidc"
+    description: >
+      Identity and authentication infrastructure — SSO, SAML, OIDC, IdP architecture.
+      10 = Built enterprise SSO from scratch, deep protocol knowledge, multi-tenant auth systems.
+      7-9 = Owned auth infrastructure, integrated multiple IdPs, understands SAML/OIDC flows.
+      4-6 = Worked on auth features, integrated with existing SSO, basic protocol understanding.
+      1-3 = No meaningful auth infrastructure experience, only consumed auth as end user.
+
+  - name: "distributed_systems"
+    description: >
+      Distributed systems design — service architecture, consistency, fault tolerance, scaling.
+      10 = Designed large-scale distributed architectures, deep CAP/consistency trade-off experience.
+      7-9 = Built and operated multi-service systems, handled scaling challenges, good design sense.
+      4-6 = Worked in microservice environments but didn't drive architecture decisions.
+      1-3 = Monolithic experience only, no evidence of distributed systems thinking.
+
+  - name: "postgres_sql"
+    description: >
+      Database expertise — Postgres, SQL optimization, data modeling, migrations.
+      10 = Deep Postgres internals, query optimization, sharding strategies, schema evolution at scale.
+      7-9 = Strong SQL and data modeling, Postgres in production, performance tuning experience.
+      4-6 = Functional SQL skills, used Postgres or similar RDBMS, basic optimization.
+      1-3 = Minimal database experience, ORM-only usage, no performance awareness.
+
+  - name: "aws_cloud"
+    description: >
+      Cloud infrastructure — AWS services (EC2, S3, RDS, Lambda), IaC, cloud architecture.
+      10 = AWS architect-level, multi-region deployments, IaC expertise, cost optimization.
+      7-9 = Strong AWS production experience across multiple services, Terraform/CDK familiarity.
+      4-6 = Used AWS in production but limited service breadth, or strong in another cloud.
+      1-3 = Minimal cloud experience, mostly local/on-prem, or only used managed PaaS.
+
+  - name: "docker_k8s"
+    description: >
+      Containerization and orchestration — Docker, Kubernetes, CI/CD pipelines.
+      10 = K8s cluster management, custom operators, production container orchestration at scale.
+      7-9 = Docker + K8s in production, Helm charts, CI/CD pipeline ownership.
+      4-6 = Docker for development, some K8s exposure, basic CI/CD involvement.
+      1-3 = No containerization experience, or Docker only for local dev.
+
+  - name: "stripe_billing"
+    description: >
+      Billing and metering systems — Stripe, usage-based billing, entitlements.
+      10 = Built billing systems from scratch, Stripe Billing at scale, metering pipelines.
+      7-9 = Significant billing integration work, usage tracking, entitlement management.
+      4-6 = Some payment integration experience, basic Stripe usage.
+      1-3 = No billing or payment system experience.
+
+  - name: "technical_leadership"
+    description: >
+      Technical leadership — architecture decisions, mentoring, design reviews, team influence.
+      10 = Staff+ engineer setting org-wide technical direction, mentoring multiple teams.
+      7-9 = Tech lead driving architecture, running design reviews, growing junior engineers.
+      4-6 = Senior IC with some mentoring, contributed to architecture decisions.
+      1-3 = Individual contributor only, no evidence of technical leadership or influence.
+
+  - name: "startup_fit"
+    description: >
+      Startup readiness — pace, ambiguity tolerance, breadth, ownership mentality.
+      10 = Multiple early-stage startup successes, built 0-to-1 products, thrives in chaos.
+      7-9 = Startup experience with demonstrated breadth and pace, comfortable with ambiguity.
+      4-6 = Mix of startup and larger company experience, some adaptability signals.
+      1-3 = Only large-company experience, may struggle with startup pace and ambiguity.
+
+  - name: "authenticity_signal"
+    description: >
+      Resume authenticity and specificity — do claims ring true and hold up to scrutiny?
+      10 = Highly specific, verifiable accomplishments, consistent narrative, unique details.
+      7-9 = Mostly specific with metrics, few generic claims, coherent career story.
+      4-6 = Mixed specificity, some boilerplate but plausible overall.
+      1-3 = Obvious keyword stuffing, fabricated claims, or JD-copying patterns.
+
+location_preference:
+  preferred_countries: ["United States", "Canada"]
+  preference_description: "Prefer US/Canada based candidates. International candidates with exceptional qualifications still considered."
+
+triage:
+  model: "claude-sonnet-4-6"
+  score_threshold: 3
+
+deep_evaluation:
+  model: "claude-opus-4-6"
+
+synthesis:
+  model: "claude-opus-4-6"
+  top_n_for_interview_questions: 8

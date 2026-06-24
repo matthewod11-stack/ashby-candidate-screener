@@ -1,0 +1,8 @@
+# Exemplar profiles — optional few-shot calibration.
+# Add a few "what good looks like" profiles to anchor scoring for a role.
+#
+# exemplars:
+#   - name: "Example Engineer"
+#     background: "Staff Engineer at a well-known AI company, previously fintech. Built SSO from scratch."
+#     why_good_fit: "Deep identity expertise, growth-stage experience, AI-native."
+exemplars: []
