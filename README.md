@@ -6,11 +6,11 @@
 
 </div>
 
-<!-- Add a report screenshot here once generated:
 <div align="center">
-  <img src="docs/screenshots/report.png" alt="Sample candidate report" width="800">
+  <img src="docs/screenshots/report.png" alt="Sample candidate report — ranked tiers, scores, and skills heatmap" width="820">
+  <p><sub>Sample report rendered from synthetic data — summary stats, ranked tiers with hire recommendations, per-candidate scores, and a skills heatmap.</sub></p>
 </div>
--->
+
 
 ## About
 
