@@ -15,6 +15,7 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from models import SynthesizedCandidate, load_json
+from stages._shared import shortlist_rows
 
 
 def _safe_url(url: str | None) -> str:
@@ -190,6 +191,14 @@ def generate_combined_report(results: list[tuple[dict, Path]]) -> Path:
             "returning_count": sum(1 for c in candidates_dicts if not c.get("is_new")),
         })
 
+    # Consolidated cross-role priority list ("who to meet this week")
+    priority_shortlist: list[dict] = []
+    for cfg, sp in results:
+        if Path(sp).exists():
+            rtitle = cfg.get("role", {}).get("title", "Unknown")
+            priority_shortlist.extend(shortlist_rows(load_json(sp), rtitle))
+    priority_shortlist.sort(key=lambda r: r["score"], reverse=True)
+
     today = date.today().isoformat()
 
     project_root = Path(__file__).resolve().parent.parent
@@ -212,6 +221,7 @@ def generate_combined_report(results: list[tuple[dict, Path]]) -> Path:
         multi_role=True,
         company_name=company_name,
         profile_label=profile_label,
+        priority_shortlist=priority_shortlist,
     )
 
     output_dir = project_root / "data" / "reports"

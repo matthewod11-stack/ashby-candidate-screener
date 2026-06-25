@@ -722,6 +722,33 @@ a:hover { text-decoration: underline; }
 
 <main class="container">
 
+{% if multi_role and priority_shortlist %}
+{# ═══════ CONSOLIDATED PRIORITY: WHO TO MEET THIS WEEK ═══════ #}
+<section class="priority-section" style="margin-bottom:2.5rem;">
+  <h2 style="margin:0 0 .25rem;">Priority — Who to Meet This Week</h2>
+  <p class="meta" style="margin:0 0 1rem;">Top-tier candidates across all {{ roles | length }} roles, highest score first.</p>
+  <div class="table-wrap">
+    <table class="ranking-table">
+      <thead>
+        <tr><th>#</th><th>Candidate</th><th>Role</th><th>Tier</th><th>Score</th><th>Recommendation</th></tr>
+      </thead>
+      <tbody>
+        {% for item in priority_shortlist %}
+        <tr class="candidate-row">
+          <td>{{ loop.index }}</td>
+          <td><strong>{{ item.name }}</strong></td>
+          <td>{{ item.role }}</td>
+          <td>{{ item.tier }}</td>
+          <td>{{ item.score }}</td>
+          <td>{{ item.recommendation }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+
 {% if multi_role %}
 {# ═══════ MULTI-ROLE MODE ═══════ #}
 {% for role in roles %}
