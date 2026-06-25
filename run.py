@@ -27,6 +27,7 @@ import yaml
 from dotenv import load_dotenv
 
 from stages.fetch import run_fetch
+from stages.sources import resolve_source
 from stages.triage import run_triage
 from stages.deep_eval import run_deep_eval
 from stages.synthesize import run_synthesize
@@ -49,7 +50,7 @@ from usage import UsageTracker
 # ---------------------------------------------------------------------------
 
 
-def load_role_config(slug: str) -> dict:
+def load_role_config(slug: str, source: str | None = None, input_dir: str | None = None) -> dict:
     """Load config for a specific role from config/roles/{slug}.yaml."""
     if not _ROLE_SLUG_RE.fullmatch(slug):
         raise SystemExit(
@@ -70,6 +71,10 @@ def load_role_config(slug: str) -> dict:
     jd_path = Path("config/roles") / config["role"].get("jd_file", f"{slug}.md")
     if jd_path.exists():
         config["jd_text"] = jd_path.read_text()
+    if source:
+        config["source"] = source
+    if input_dir:
+        config["input_dir"] = input_dir
     return config
 
 
@@ -163,7 +168,7 @@ def run_role(config: dict, resume: bool = False) -> tuple[Path, Path]:
 
     # --- Stage 1: Fetch ---------------------------------------------------
     print("=" * 50)
-    print("STAGE 1: Fetch candidates from Ashby")
+    print(f"STAGE 1: Fetch candidates (source: {config.get('source', 'ashby')})")
     print("=" * 50)
 
     if _should_skip(1, resume, stage_outputs):
@@ -174,7 +179,7 @@ def run_role(config: dict, resume: bool = False) -> tuple[Path, Path]:
     else:
         try:
             t0 = time.time()
-            candidates_path = run_fetch(config)
+            candidates_path = resolve_source(config)(config)
             elapsed = time.time() - t0
             all_candidates = _validate_json_output(candidates_path, "Stage 1")
             stage_stats["fetched"] = len(all_candidates)
@@ -404,7 +409,31 @@ def main():
         action="store_true",
         help="Run for all configured roles",
     )
+    parser.add_argument(
+        "--source",
+        type=str,
+        choices=["ashby", "local"],
+        help="Input source for Stage 1 (default: ashby)",
+    )
+    parser.add_argument(
+        "--input-dir",
+        type=str,
+        help="For --source local: folder containing candidates.csv + résumés",
+    )
+    parser.add_argument(
+        "--demo",
+        action="store_true",
+        help="Zero-key demo: render a sample report from bundled synthetic data",
+    )
     args = parser.parse_args()
+
+    if args.demo:
+        from stages.demo import run_demo
+        slug = args.role or "staff-backend-engineer"
+        report_path = run_demo(slug=slug)
+        print(f"\nDemo report generated: {report_path}")
+        print(f"Open in browser: file://{report_path.resolve()}")
+        return
 
     if args.all:
         slugs = list_available_roles()
@@ -423,7 +452,10 @@ def main():
         print(f"ROLE: {slug}")
         print(f"{'=' * 60}")
 
-        config = load_role_config(slug)
+        config = load_role_config(slug, source=args.source, input_dir=args.input_dir)
+        if config.get("source") == "local" and not config.get("input_dir"):
+            print("Error: --source local requires --input-dir")
+            sys.exit(1)
         synth_path, report_path = run_role(config, resume=args.resume)
         results.append((config, synth_path))
 
