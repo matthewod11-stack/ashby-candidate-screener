@@ -28,6 +28,12 @@ from dotenv import load_dotenv
 
 from stages.fetch import run_fetch
 from stages.sources import resolve_source
+from stages._shared import shortlist_rows
+from stages.export import (
+    write_shortlist_csv,
+    write_shortlist_md,
+    combined_shortlist_rows,
+)
 from stages.triage import run_triage
 from stages.deep_eval import run_deep_eval
 from stages.synthesize import run_synthesize
@@ -341,6 +347,18 @@ def run_role(config: dict, resume: bool = False) -> tuple[Path, Path]:
         print("\nPipeline aborted at Stage 5 (Report)")
         sys.exit(1)
 
+    # --- Shortlist export (top-2-tier, for hiring managers) ---------------
+    try:
+        rows = shortlist_rows(candidates_list, role)
+        if rows:
+            reports_dir = data_dir / "reports"
+            write_shortlist_csv(rows, reports_dir / "shortlist.csv")
+            write_shortlist_md(rows, reports_dir / "shortlist.md", title=f"{role} — Shortlist")
+            print(f"  Shortlist: {len(rows)} candidates -> {reports_dir}/shortlist.csv|.md\n")
+    except Exception:
+        traceback.print_exc()
+        print("  WARNING: Shortlist export failed (non-fatal)\n")
+
     # --- Slack summary (post-pipeline) ------------------------------------
     try:
         slack_summary_path = generate_slack_summary(synthesis_path, report_path, config)
@@ -465,11 +483,28 @@ def main():
             from stages.report import generate_combined_report
             combined_path = generate_combined_report(results)
             print(f"\nCombined report: {combined_path}")
-        except ImportError:
-            print("\n  NOTE: generate_combined_report not yet implemented -- skipping combined report")
         except Exception:
             traceback.print_exc()
             print("\n  WARNING: Combined report generation failed (non-fatal)")
+
+        # Combined shortlist across all roles ("who to meet this week")
+        try:
+            combined_rows = combined_shortlist_rows(results)
+            if combined_rows:
+                out_dir = Path("data/reports")
+                write_shortlist_csv(combined_rows, out_dir / "shortlist_combined.csv")
+                write_shortlist_md(
+                    combined_rows,
+                    out_dir / "shortlist_combined.md",
+                    title="Priority — Who to Meet This Week",
+                )
+                print(
+                    f"Combined shortlist: {len(combined_rows)} candidates "
+                    f"-> {out_dir}/shortlist_combined.csv|.md"
+                )
+        except Exception:
+            traceback.print_exc()
+            print("  WARNING: Combined shortlist export failed (non-fatal)")
 
 
 if __name__ == "__main__":

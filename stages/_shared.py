@@ -49,3 +49,37 @@ def load_resume_as_content_block(resume_path: str | None) -> dict | None:
 def load_pdf_as_document_block(pdf_path: str) -> dict | None:
     """Backward-compatible alias. Prefer load_resume_as_content_block."""
     return load_resume_as_content_block(pdf_path)
+
+
+SHORTLIST_TIER_PREFIXES = ("Tier 1", "Tier 2")
+
+
+def shortlist_rows(synth_dicts: list[dict], role_title: str = "") -> list[dict]:
+    """Filter synthesis candidates to the top two tiers, flatten to rows.
+
+    Returns the "worth a conversation" set — Tier 1 and Tier 2 candidates —
+    as flat dicts with stable keys, sorted by score descending. Shared by the
+    combined report's priority section and the shortlist exporter.
+    """
+    rows: list[dict] = []
+    for c in synth_dicts:
+        tier = str(c.get("final_tier", ""))
+        if not tier.startswith(SHORTLIST_TIER_PREFIXES):
+            continue
+        ev = c.get("evaluated", {}) or {}
+        cand = ev.get("candidate", {}) or {}
+        rows.append(
+            {
+                "role": role_title,
+                "name": cand.get("name", ""),
+                "tier": tier,
+                "score": c.get("final_score", 0),
+                "recommendation": ev.get("recommendation", ""),
+                "current_role": ev.get("current_role", ""),
+                "years_experience": ev.get("years_experience", ""),
+                "email": cand.get("email", ""),
+                "profile_url": cand.get("profile_url", ""),
+            }
+        )
+    rows.sort(key=lambda r: r["score"], reverse=True)
+    return rows
