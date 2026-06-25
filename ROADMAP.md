@@ -13,12 +13,12 @@ Decouple ingestion from any single ATS so the pipeline runs on any set of résum
 - **Zero-key demo** — `python run.py --demo` runs end-to-end on bundled synthetic data with no API keys and opens a sample report.
 - **Bundled `examples/`** — a set of synthetic candidates you can run immediately (and that double as test fixtures in Phase 3).
 
-## Phase 2 — A complete hiring workflow
+## Phase 2 — A complete hiring workflow ✅ Shipped
 
 Make the output match how recruiting teams actually operate.
 
-- **Combined multi-role report** — one consolidated view across roles and recruiters: *"who do we collectively need to meet this week."* (Today this is a stub.)
-- **Shortlist export** — export the top candidates as CSV / Markdown to hand directly to a hiring manager.
+- **Combined multi-role report** — a consolidated *"who do we collectively need to meet this week"* priority list (top-two-tier candidates across all roles, score-sorted) leading the combined report, above the per-role tabs.
+- **Shortlist export** — top candidates exported as CSV + Markdown (per-role `shortlist.*` and a combined `shortlist_combined.*`) to hand directly to a hiring manager.
 
 ## Phase 3 — Confidence & reach
 

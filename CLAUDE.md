@@ -40,12 +40,16 @@ models.py                       # Dataclasses + load_json/save_json helpers
 state.py                        # Per-role state.json: dedup + cached evals
 usage.py                        # UsageTracker + PRICES; per-run token + cost ledger
 stages/
-  _shared.py                    # PDF helper used by triage + deep_eval (no stage-to-stage imports)
-  fetch.py                      # Stage 1: Ashby API → raw candidates JSON (parallel via Semaphore)
+  _shared.py                    # Résumé→content-block loader + shortlist_rows (shared helpers)
+  sources.py                    # Stage 1 source dispatcher (ashby | local)
+  fetch.py                      # Stage 1 (ashby): Ashby API → raw candidates JSON (parallel)
+  local_source.py               # Stage 1 (local): folder of résumés + candidates.csv → JSON
   triage.py                     # Stage 2: Sonnet pass/fail at score threshold
   deep_eval.py                  # Stage 3: Opus scores on configured dimensions
   synthesize.py                 # Stage 4: Opus produces tiering + interview questions
-  report.py                     # Stage 5: Jinja2 → HTML (per role + combined stub)
+  report.py                     # Stage 5: Jinja2 → HTML (per role + combined w/ priority view)
+  export.py                     # Shortlist export (CSV + Markdown) for hiring managers
+  demo.py                       # Zero-key demo: mock synthesis → report
   slack_summary.py              # Post-pipeline Slack message builder
 config/
   roles/                        # One YAML + one Markdown JD per role (see Roles below)
@@ -93,7 +97,7 @@ State (`state.json`) is keyed by lowercased email; stores `cached_eval` + `cache
 
 ## Multi-Role Mode
 
-With `--all`, `run.py` iterates every slug from `config/roles/*.yaml` sequentially, then attempts a combined report. The combined report function is currently a **stub** — `generate_combined_report` is imported in a `try/except ImportError` block (`run.py` ~line 412). If you implement it, it goes in `stages/report.py`.
+With `--all`, `run.py` iterates every slug from `config/roles/*.yaml` sequentially, then renders a combined report via `generate_combined_report` (`stages/report.py`). The combined report leads with a consolidated **"who to meet this week"** priority list — top-two-tier candidates across all roles, score-sorted — above the per-role tabs, and writes a combined shortlist (`data/reports/shortlist_combined.csv|.md`). Each single-role run also writes a per-role `shortlist.csv|.md`.
 
 ## Conventions
 
@@ -118,5 +122,4 @@ With `--all`, `run.py` iterates every slug from `config/roles/*.yaml` sequential
 
 ## What's Next
 
-- **Combined multi-role report** — stubbed, not implemented. `generate_combined_report` is imported in a `try/except ImportError` block in `run.py` (~line 412); implement it in `stages/report.py`.
-- **Tests** — no suite is configured yet.
+- **Phase 3** — GitHub Actions CI + a hosted live demo report. See `ROADMAP.md`.
