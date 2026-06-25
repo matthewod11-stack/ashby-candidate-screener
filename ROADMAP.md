@@ -4,7 +4,7 @@ The screener works today against the Ashby API. This roadmap makes it **runnable
 
 ---
 
-## Phase 1 — Run it anywhere
+## Phase 1 — Run it anywhere ✅ Shipped
 
 Decouple ingestion from any single ATS so the pipeline runs on any set of résumés.
 
