@@ -15,7 +15,7 @@ import anthropic
 from dotenv import load_dotenv
 
 from models import RawCandidate, TriagedCandidate, load_json, save_json
-from stages._shared import load_pdf_as_document_block
+from stages._shared import load_resume_as_content_block
 from usage import UsageTracker
 
 log = logging.getLogger(__name__)
@@ -163,7 +163,7 @@ async def _triage_one(
 
         # Add resume PDF if available
         if candidate.resume_path:
-            doc_block = load_pdf_as_document_block(candidate.resume_path)
+            doc_block = load_resume_as_content_block(candidate.resume_path)
             if doc_block:
                 content_blocks.append(doc_block)
             else:

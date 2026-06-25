@@ -21,7 +21,7 @@ from models import (
     load_json,
     save_json,
 )
-from stages._shared import load_pdf_as_document_block
+from stages._shared import load_resume_as_content_block
 from usage import UsageTracker
 
 log = logging.getLogger(__name__)
@@ -296,7 +296,7 @@ async def _run_single_eval(
 
         # Attach resume PDF
         if candidate.resume_path:
-            doc_block = load_pdf_as_document_block(candidate.resume_path)
+            doc_block = load_resume_as_content_block(candidate.resume_path)
             if doc_block:
                 content_blocks.append(doc_block)
             else:
