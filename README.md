@@ -11,6 +11,22 @@
   <p><sub>Sample report rendered from synthetic data — summary stats, ranked tiers with hire recommendations, per-candidate scores, and a skills heatmap.</sub></p>
 </div>
 
+## Try it in 30 seconds
+
+No Ashby, no API keys — render a sample report from bundled synthetic data:
+
+```bash
+python run.py --demo
+```
+
+Run it on **your own résumés** (a folder of `.md` / `.txt` / `.pdf` files plus a
+`candidates.csv`) — needs only an Anthropic API key, no ATS:
+
+```bash
+python run.py --role staff-backend-engineer --source local --input-dir examples/sample-candidates
+```
+
+See [`examples/`](examples/) for the format.
 
 ## About
 

@@ -26,6 +26,8 @@ python run.py                          # default role: staff-backend-engineer
 python run.py --role bdr               # specific role
 python run.py --all                    # every role in config/roles/
 python run.py --role bdr --resume      # skip stages whose JSON output exists
+python run.py --demo                   # zero-key demo: sample report from synthetic data
+python run.py --source local --input-dir ./candidates/   # run on a local résumé folder (no ATS)
 ```
 
 No test suite is configured.
