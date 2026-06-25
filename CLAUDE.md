@@ -30,7 +30,7 @@ python run.py --demo                   # zero-key demo: sample report from synth
 python run.py --source local --input-dir ./candidates/   # run on a local résumé folder (no ATS)
 ```
 
-No test suite is configured.
+Run the tests with `pytest` (dev deps: `pip install -r requirements-dev.txt`). CI runs them on every push/PR across Python 3.12–3.14 — see `.github/workflows/ci.yml`. No test makes a network or API call.
 
 ## Structure
 
@@ -122,4 +122,4 @@ With `--all`, `run.py` iterates every slug from `config/roles/*.yaml` sequential
 
 ## What's Next
 
-- **Phase 3** — GitHub Actions CI + a hosted live demo report. See `ROADMAP.md`.
+Phases 1–3 of `ROADMAP.md` are shipped (run-anywhere, complete hiring workflow, CI + hosted live demo). The live demo report auto-deploys to [GitHub Pages](https://matthewod11-stack.github.io/ashby-candidate-screener/) from `python run.py --demo` on every push to `main` (`.github/workflows/pages.yml`).

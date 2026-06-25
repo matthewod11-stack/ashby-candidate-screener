@@ -20,10 +20,10 @@ Make the output match how recruiting teams actually operate.
 - **Combined multi-role report** — a consolidated *"who do we collectively need to meet this week"* priority list (top-two-tier candidates across all roles, score-sorted) leading the combined report, above the per-role tabs.
 - **Shortlist export** — top candidates exported as CSV + Markdown (per-role `shortlist.*` and a combined `shortlist_combined.*`) to hand directly to a hiring manager.
 
-## Phase 3 — Confidence & reach
+## Phase 3 — Confidence & reach ✅ Shipped
 
-- **Test suite + CI** — automated tests over the scoring, dedup, state, and reporting logic, run on every push (with a status badge).
-- **Live demo** — the sample report published as a hosted page so anyone can see the output without running anything.
+- **Test suite + CI** — 27 tests over the dedup/state, source-ingestion, shortlist-export, and reporting logic, run on every push and PR via [GitHub Actions](.github/workflows/ci.yml) across Python 3.12 / 3.13 / 3.14, with a status badge in the README.
+- **Live demo** — the zero-key sample report is rendered fresh from `python run.py --demo` and published to [GitHub Pages](https://matthewod11-stack.github.io/ashby-candidate-screener/) on every push to `main`, so anyone can see the output without running anything (and the hosted page never goes stale).
 
 ---
 
