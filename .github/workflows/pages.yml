@@ -1,0 +1,63 @@
+name: Deploy demo to Pages
+
+# Renders the zero-key demo report and publishes it to GitHub Pages, so the
+# README "live demo" link always reflects the current template — nothing
+# stale is committed to the repo (the report lives under gitignored data/).
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Read-only token plus the two scopes the Pages deployment needs.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never run two deploys at once; let an in-progress one finish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Render demo report
+        run: python run.py --demo
+
+      - name: Stage site
+        run: |
+          mkdir -p _site
+          report="$(ls -t data/roles/staff-backend-engineer/reports/report_*.html | head -1)"
+          cp "$report" _site/index.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

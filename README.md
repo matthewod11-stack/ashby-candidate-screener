@@ -4,11 +4,14 @@
 
 **AI-powered candidate screening for the [Ashby](https://www.ashbyhq.com/) ATS — tiered Claude evaluation that turns a pile of applicants into a ranked shortlist with per-candidate scores and tailored interview questions.**
 
+[![CI](https://github.com/matthewod11-stack/ashby-candidate-screener/actions/workflows/ci.yml/badge.svg)](https://github.com/matthewod11-stack/ashby-candidate-screener/actions/workflows/ci.yml)
+
 </div>
 
 <div align="center">
-  <img src="docs/screenshots/report.png" alt="Sample candidate report — ranked tiers, scores, and skills heatmap" width="820">
+  <a href="https://matthewod11-stack.github.io/ashby-candidate-screener/"><img src="docs/screenshots/report.png" alt="Sample candidate report — ranked tiers, scores, and skills heatmap" width="820"></a>
   <p><sub>Sample report rendered from synthetic data — summary stats, ranked tiers with hire recommendations, per-candidate scores, and a skills heatmap.</sub></p>
+  <p><strong>▶ <a href="https://matthewod11-stack.github.io/ashby-candidate-screener/">See the live demo report</a></strong> — the real output, hosted, nothing to install.</p>
 </div>
 
 ## Try it in 30 seconds
